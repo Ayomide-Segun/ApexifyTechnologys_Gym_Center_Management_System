@@ -11,6 +11,7 @@ const specializationRoutes = require('./routes/specializationRoutes');
 const classRoutes = require('./routes/classRoutes');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 const subscriptionRoutes = require('./routes/subscriptionRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/api', specializationRoutes);
 app.use('/api', classRoutes);
 app.use('/api', attendanceRoutes);
 app.use('/api', subscriptionRoutes);
+app.use('/api', paymentRoutes);
 
 connectDB();
 const PORT = process.env.PORT || 5000;

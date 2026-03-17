@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../Models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
@@ -23,7 +23,7 @@ exports.register = async(req, res) => {
 
         const phoneExist = await User.findOne({phone});
         if(phoneExist){
-            return re.status(400).json({
+            return res.status(400).json({
                 message: 'Phone number has been used'
             })
         }
@@ -161,7 +161,7 @@ exports.deleteUser = async(req, res) => {
 
 exports.allUsers = async(req, res) => {
     try{
-        const users = await User.find().select("-find");
+        const users = await User.find().select("-password");
         if(!users.length) {
             return res.status(200).json({
                 message: "No user found",
@@ -176,3 +176,22 @@ exports.allUsers = async(req, res) => {
         })
     }
 };
+
+exports.updateUser = async(req, res) => {
+    const {id} = req.params;
+    try {
+        const user = await User.findByIdAndUpdate(
+            id,
+            req.body,
+            {returnDocument: 'after'}
+        )
+        res.status(201).json({
+            message: "User updated successfully"
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            message: "Failed to update user"
+        })
+    }
+}

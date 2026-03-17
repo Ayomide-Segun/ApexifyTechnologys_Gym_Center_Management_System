@@ -1,12 +1,12 @@
 const stripe = require('../config/stripe');
-const Payment = require('../models/Payment');
-const Subscription = require('../models/Subscription')
+const Payment = require('../Models/Payment');
+const Subscription = require('../Models/Subscription')
 
 exports.createCheckoutSession = async(req, res) => {
     const { classroom, member, quantity, subscription } = req.body;
     try{
-        const subscription = await Subscription.findById(subscription);
-        const amount = subscription.price;
+        const subscriptionModel = await Subscription.findById(subscription);
+        const amount = subscriptionModel.price;
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items: [
@@ -43,5 +43,15 @@ exports.createCheckoutSession = async(req, res) => {
             message: "Payment denied"
         });
     }
-    
+}
+
+exports.allPayments = async(req, res) => {
+    try{
+        const payments = await Payment.find();
+        res.status(200).json(payments);
+    }catch(error){
+        res.status(500).json({
+            message: "Payment failed to fetch"
+        })
     }
+}

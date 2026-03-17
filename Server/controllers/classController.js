@@ -7,7 +7,7 @@ exports.addClass = async(req, res) => {
             name,
             training,
             trainer,
-            session,
+            capacity,
             session,
             time
         })

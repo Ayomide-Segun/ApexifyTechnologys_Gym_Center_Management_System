@@ -18,8 +18,7 @@ const subscriptionSchema = new mongoose.Schema({
 
     hasPersonalTrainer: Boolean,
     hasCustomWorkout: Boolean,
-
-    features: [String]
+    hasDietPlan: Boolean
 })
-
-module.exports = mongoose.model('Subscription', subscriptionSchema);
+const Subscription = mongoose.models.Subscription || mongoose.model('Subscription', subscriptionSchema)
+module.exports = Subscription;

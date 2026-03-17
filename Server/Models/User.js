@@ -33,8 +33,7 @@ const userSchema = new mongoose.Schema(
             }
         ],
         availability:[{
-            type: String,
-            required: true
+            type: String
         }],
         session:{
             type: String,
@@ -58,8 +57,7 @@ const userSchema = new mongoose.Schema(
             ref: "Class"
         },
         preferredTime: {
-            type: String,
-            required: true
+            type: String
         },
         signUpReason: {
             type: String
@@ -74,5 +72,5 @@ const userSchema = new mongoose.Schema(
         timestamps: true
     }
 )
-
-module.exports = mongoose.model('User', userSchema)
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+module.exports = User;
