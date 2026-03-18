@@ -6,6 +6,10 @@ export function UtilityContextProvider({children}) {
     const navigate = useNavigate();
     const [openSidebar, setOpenSidebar] = useState(false);
     const [openAuthenticatePanel, setOpenAuthenticatePanel] = useState(false)
+    const [clickedSidebarOption, setClickedSidebarOption] = useState(() => {
+            const saved = localStorage.getItem('clickedSidebarOption');
+            return saved ? JSON.parse(saved) : "Dashboard"
+    })
 
     return(
         <UtilityContext.Provider
@@ -14,7 +18,9 @@ export function UtilityContextProvider({children}) {
                 openSidebar,
                 setOpenSidebar,
                 openAuthenticatePanel,
-                setOpenAuthenticatePanel
+                setOpenAuthenticatePanel,
+                clickedSidebarOption,
+                setClickedSidebarOption
             }}
         >
             {children}

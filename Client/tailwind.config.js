@@ -9,7 +9,8 @@ export default {
       colors: {
         background: "#111315",
         primary: "#494e53",
-        secondary: "#e3590f"
+        secondary: "#e3590f",
+        tableColor: "#2C343B"
       }
     },
   },

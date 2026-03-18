@@ -4,13 +4,18 @@ import { createRoot } from 'react-dom/client'
 import { UtilityContextProvider } from './contexts/utilityContext.jsx'
 import './index.css'
 import App from './App.jsx'
+import ReactDOM from 'react-dom/client'
+import { DataContextProvider } from './contexts/DataContext.jsx'
 
-createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <StrictMode>
-      <UtilityContextProvider>
-        <App />
-      </UtilityContextProvider>
+      <DataContextProvider>
+        <UtilityContextProvider>
+          <App />
+        </UtilityContextProvider>
+      </DataContextProvider>
+      
     </StrictMode>
   </BrowserRouter>
   ,
