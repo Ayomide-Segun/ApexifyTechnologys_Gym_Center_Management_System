@@ -10,11 +10,12 @@ import { DataContextProvider } from './contexts/DataContext.jsx'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <StrictMode>
-      <DataContextProvider>
-        <UtilityContextProvider>
+      <UtilityContextProvider>
+        <DataContextProvider>
           <App />
-        </UtilityContextProvider>
-      </DataContextProvider>
+        </DataContextProvider>
+      </UtilityContextProvider>
+     
       
     </StrictMode>
   </BrowserRouter>

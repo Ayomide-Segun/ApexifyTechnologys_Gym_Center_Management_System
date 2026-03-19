@@ -7,19 +7,9 @@ import { FaPlus, FaEye, FaPen, FaEyeSlash } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
 export function Members() {
-    const  { navigate, openAuthenticatePanel, setOpenAuthenticatePanel, openSidebar, setOpenSidebar } = useContext(UtilityContext);
-    const {users, setUsers, payments, setPayments, members, subscriptions, handleDelete} = useContext(DataContext);
-    const tableHeader = ["Username", "Member ID", "Package", "Joining Date", "Expiry Date", "Amount", "Status", "Action"]
-    const [showRow, setShowRow] = useState({
-        id: '',
-        visibility: true
-    });
-
-    
-
-    useEffect(()=>{
-        console.log(showRow)
-    }, [showRow])
+    const  { navigate, openAuthenticatePanel, showRow, setShowRow } = useContext(UtilityContext);
+    const { payments, members, handleDelete} = useContext(DataContext);
+    const tableHeader = ["Username", "Member ID", "Package", "Join Date", "Expiry Date", "Amount", "Status", "Action"]
 
     return(
         <>
@@ -33,24 +23,13 @@ export function Members() {
                         <p>
                             Member List
                         </p>
-                        <div
-                            className="flex justify-between my-[15px] items-center"
-                        >
-                            <input 
-                                type="search" 
-                                name="search-bar" 
-                                id="search-bar"
-                                placeholder="Search here ..."
-                                className="bg-primary rounded-lg w-[60%] outline-none text-white px-[10px] h-[30px]"
-                            />
-                            <button
-                                className="bg-secondary flex items-center rounded-lg text-xs sm:text-sm md:text-lg px-[10px] py-[6px]"
-                                onClick={() => navigate('/members/add-member')}
-                            >
-                                <FaPlus />
-                                Add Member
-                            </button>
-                        </div>
+                        <input 
+                            type="search" 
+                            name="search-bar" 
+                            id="search-bar"
+                            placeholder="Search here ..."
+                            className="bg-primary rounded-lg w-[60%] outline-none text-white px-[10px] h-[30px]"
+                        />    
                         <div
                             className="bg-primary w-full rounded-lg"
                         >
@@ -155,11 +134,6 @@ export function Members() {
                                                 })}
                                             />
                                         }
-                                        
-                                        <FaPen
-                                            color="yellow"
-                                            onClick={() => navigate()}
-                                        />
                                         <MdDelete
                                             color="red"
                                             onClick={(e) => handleDelete(e, _id)}

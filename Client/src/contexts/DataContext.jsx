@@ -1,14 +1,32 @@
 import { createContext, useEffect, useState } from "react";
 import api from "../api/axios";
+import { UtilityContext } from "./utilityContext";
+import { useContext } from "react";
 
 export const DataContext = createContext();
 export function DataContextProvider({children}) {
+
+    const {setAddTrainerClicked} = useContext(UtilityContext);
     const [users, setUsers] = useState(null);
     const [payments, setPayments] = useState(null);
     const members = users?.filter((user) => {
         return payments?.find((payment)=> payment.member._id === user._id && user.role === "member")
     })
-    const [subscriptions, setSubscriptions] = useState(null)
+    const trainers = users?.filter((user) => user.role === "trainer")
+    const [subscriptions, setSubscriptions] = useState(null);
+    const [specializations, setSpecializations] = useState(null);
+
+    const [trainerDetails, setTrainerDetails] = useState(() => {
+        const saved = localStorage.getItem("trainerDetails");
+        return saved ? JSON.parse(saved) : {
+            name: "",
+            email: "",
+            role: "trainer",
+            phone: "",
+            trainings: [],
+            session: ""
+        }
+    })
     
     async function handleUpdate(e, id, userDetails) {
         e.preventDefault();
@@ -18,7 +36,7 @@ export function DataContextProvider({children}) {
             setUsers(prev => 
                 prev.map((p) =>
                     p._id === id ?
-                    {...p, username: userDetails.username}:
+                    {...p, userDetails}:
                     p
                 )
             )
@@ -44,6 +62,27 @@ export function DataContextProvider({children}) {
         }
     }
 
+    async function handleSubmit(e, userDetails){
+        e.preventDefault();
+        setAddTrainerClicked(false);
+        try {
+            const res = await api.post('/register', userDetails);
+            alert('Trainer registered successfully');
+            setUsers(prev => [
+                ...prev,
+                res.data
+            ]);
+            localStorage.removeItem("trainerDetails")
+
+        } catch (error) {
+            console.log(error.response?.data.message || 'something went wrong')
+            alert('Failed to add trainer')
+        }
+    }
+
+    useEffect(() => {
+        localStorage.setItem("trainerDetails", JSON.stringify(trainerDetails))
+    }, [trainerDetails])
    
     useEffect(()=>{
         api.get('/all-users')
@@ -60,6 +99,7 @@ export function DataContextProvider({children}) {
         })
         .catch(err => console.log(err))
     }, []);
+
     useEffect(()=>{
         api.get('/all-subscriptions')
         .then((res) => {
@@ -68,7 +108,19 @@ export function DataContextProvider({children}) {
         .catch(error =>
             console.log(error)
         );
-    }, [])
+    }, []);
+
+    useEffect(()=>{
+        api.get('/all-specializations')
+        .then((res) => {
+            setSpecializations(res.data);
+        })
+        .catch(error =>
+            console.log(error)
+        );
+    }, []);
+
+
     return(
         <DataContext.Provider
             value={{
@@ -77,10 +129,16 @@ export function DataContextProvider({children}) {
                 payments,
                 setPayments,
                 members,
+                trainers,
                 subscriptions,
                 setSubscriptions,
                 handleUpdate,
-                handleDelete
+                handleDelete,
+                specializations,
+                setSpecializations,
+                trainerDetails,
+                setTrainerDetails,
+                handleSubmit
             }}
         >
             {children}

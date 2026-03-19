@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const UtilityContext = createContext();
@@ -10,6 +10,18 @@ export function UtilityContextProvider({children}) {
             const saved = localStorage.getItem('clickedSidebarOption');
             return saved ? JSON.parse(saved) : "Dashboard"
     })
+    const [showRow, setShowRow] = useState({
+        id: '',
+        visibility: true
+    });
+    const [addTrainerClicked, setAddTrainerClicked] = useState(() => {
+        const saved = localStorage.getItem("addTrainerClicked");
+        return saved ? JSON.parse(saved) : false
+    })
+
+    useEffect(() => {
+        localStorage.setItem("addTrainerClicked", JSON.stringify(addTrainerClicked))
+    }, [addTrainerClicked])
 
     return(
         <UtilityContext.Provider
@@ -20,7 +32,11 @@ export function UtilityContextProvider({children}) {
                 openAuthenticatePanel,
                 setOpenAuthenticatePanel,
                 clickedSidebarOption,
-                setClickedSidebarOption
+                setClickedSidebarOption,
+                showRow,
+                setShowRow,
+                addTrainerClicked,
+                setAddTrainerClicked
             }}
         >
             {children}

@@ -8,7 +8,7 @@ import { Cancel } from './screens/Cancel';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { UtilityContext } from "./contexts/utilityContext";
-import { AddMember } from "./screens/AddMember"
+import { AddTrainer } from "./screens/AddTrainer"
 import { Trainers } from './screens/Trainers';
 
 function App() { 
@@ -64,9 +64,9 @@ function App() {
                                 }
                             />
                             <Route
-                                path='/members/add-member'
+                                path='/trainers/add-trainer'
                                 element={
-                                    <AddMember/>
+                                    <AddTrainer/>
                                 }
                             />
                         </Routes>

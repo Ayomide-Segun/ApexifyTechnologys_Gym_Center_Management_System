@@ -11,17 +11,22 @@ import { UtilityContext } from "../contexts/utilityContext";
 export function Sidebar(props) {
     const {navigate, openSidebar} = props;
     const sidebarOptions = ["Dashboard", "Members", "Diet plans", "Class schedules", "Trainers", "Billing list", "Report", "Logout", "Settings"];
-    const {clickedSidebarOption, setClickedSidebarOption} = useContext(UtilityContext)
+    const {clickedSidebarOption, setClickedSidebarOption, addTrainerClicked} = useContext(UtilityContext)
 
     useEffect(() => {
-        localStorage.setItem('clickedSidebarOption', JSON.stringify(clickedSidebarOption))
-    }, [clickedSidebarOption])
-    useEffect(()=>{
         if(clickedSidebarOption === "Dashboard"){
             navigate('/')
         } else if(clickedSidebarOption === "Members"){
             navigate('/members')
-        }
+        } else if (clickedSidebarOption === "Trainers"){
+            addTrainerClicked ?
+            navigate('/trainers/add-trainer') :
+            navigate('/trainers')
+        } 
+    }, [clickedSidebarOption, addTrainerClicked])
+
+    useEffect(() => {
+        localStorage.setItem('clickedSidebarOption', JSON.stringify(clickedSidebarOption))
     }, [clickedSidebarOption])
 
     return(
@@ -42,10 +47,13 @@ export function Sidebar(props) {
                     className={clsx(
                         option === "Logout" && "block sm:hidden",
                         "w-full h-[10px] sm:h-[30px] flex items-center py-[25px] pl-[10px] cursor-pointer",
-                        clickedSidebarOption === option && "bg-secondary text-white"
+                        clickedSidebarOption === option && "bg-secondary text-white",
                     )}
                     key={index}
-                    onClick={() => setClickedSidebarOption(option)}
+                    onClick={() => {
+                        setClickedSidebarOption(option)
+        
+                    }}
                 >
                     {
                         option === "Dashboard" ?
