@@ -11,18 +11,24 @@ import { UtilityContext } from "../contexts/utilityContext";
 export function Sidebar(props) {
     const {navigate, openSidebar} = props;
     const sidebarOptions = ["Dashboard", "Members", "Diet plans", "Class schedules", "Trainers", "Billing list", "Report", "Logout", "Settings"];
-    const {clickedSidebarOption, setClickedSidebarOption, addTrainerClicked} = useContext(UtilityContext)
+    const {clickedSidebarOption, setClickedSidebarOption, addTrainerClicked, addClassClicked} = useContext(UtilityContext)
 
     useEffect(() => {
         if(clickedSidebarOption === "Dashboard"){
             navigate('/')
         } else if(clickedSidebarOption === "Members"){
             navigate('/members')
-        } else if (clickedSidebarOption === "Trainers"){
+        } else if(clickedSidebarOption === "Trainers"){
             addTrainerClicked ?
             navigate('/trainers/add-trainer') :
             navigate('/trainers')
-        } 
+        } else if(clickedSidebarOption === "Class schedules"){
+            addClassClicked ?
+            navigate('/classes/add-class') :
+            navigate('/classes')
+        } else if (clickedSidebarOption === "Billing list"){
+            navigate('/billings')
+        }
     }, [clickedSidebarOption, addTrainerClicked])
 
     useEffect(() => {

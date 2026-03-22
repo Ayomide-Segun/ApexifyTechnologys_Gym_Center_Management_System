@@ -5,7 +5,8 @@ const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail')
 
 exports.register = async(req, res) => {
-    const { username, email, password, role, phone, trainings, availability, session, classroom, preferredTime, signUpReason, weight, existingConditions, allergies } = req.body;
+    const { username, email, role, phone, trainings, availability, session, classroom, preferredTime, signUpReason, weight, existingConditions, allergies } = req.body;
+    const password = "pass123";
     try{
         const userExist = await User.findOne({username});
         if(userExist){
@@ -114,19 +115,19 @@ exports.verifyEmail = async(req, res) => {
 }
 
 exports.login = async(req, res) => {
-    const {username, password} = req.body;
+    const {gymId, password} = req.body;
     try{
-        const user = await User.findOne({username})
+        const user = await User.findOne({gymId})
         if(!user){
             return res.status(400).json({
-                Message: "Incorrect username or password"
+                Message: "Incorrect id or password"
             })
         }
         
         const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch){
             return res.status(400).json({
-                Message: "Incorrect username or password"
+                Message: "Incorrect id or password"
             })
         }
         const token = jwt.sign(
@@ -161,7 +162,12 @@ exports.deleteUser = async(req, res) => {
 
 exports.allUsers = async(req, res) => {
     try{
-        const users = await User.find().select("-password");
+        const users = await User
+        .find()
+        .select("-password")
+        .populate("subscription")
+        .populate("trainings")
+        .populate("classroom");
         if(!users.length) {
             return res.status(200).json({
                 message: "No user found",
@@ -186,7 +192,8 @@ exports.updateUser = async(req, res) => {
             {returnDocument: 'after'}
         )
         res.status(201).json({
-            message: "User updated successfully"
+            message: "User updated successfully",
+            data: user
         })
     } catch (error) {
         console.log(error)

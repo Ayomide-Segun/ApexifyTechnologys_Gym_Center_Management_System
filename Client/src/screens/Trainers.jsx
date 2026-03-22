@@ -1,5 +1,3 @@
-import { Sidebar } from "../components/Sidebar";
-import { Header } from "../components/Header";
 import { useContext, useEffect, useState } from "react";
 import { UtilityContext } from "../contexts/utilityContext";
 import { DataContext } from "../contexts/DataContext";
@@ -7,10 +5,13 @@ import { FaPlus, FaEye, FaPen, FaEyeSlash } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
 export function Trainers(){
-    const  { navigate, openAuthenticatePanel, showRow, setShowRow, setClickedSidebarOption, setAddTrainerClicked} = useContext(UtilityContext);
-        const {trainers, handleDelete, handleUpdate} = useContext(DataContext);
-        const tableHeader = ["","Username", "Member ID", "Join Date", "Class", "Action"]
-        console.log(trainers);
+    const  { navigate, openAuthenticatePanel, showRow, setShowRow, setAddTrainerClicked} = useContext(UtilityContext);
+    const {trainers, handleDelete, handleUpdate} = useContext(DataContext);
+    const tableHeader = ["","Username", "Member ID", "Join Date", "Class", "Action"]
+
+    useEffect(() => {
+        setAddTrainerClicked(false)
+    }, [])
     return(
         <>
             <div
@@ -34,7 +35,7 @@ export function Trainers(){
                             className="bg-primary rounded-lg w-[60%] outline-none text-white px-[10px] h-[30px]"
                         />
                         <button
-                            className="bg-secondary flex items-center rounded-lg text-xs sm:text-sm md:text-lg px-[10px] py-[6px]"
+                            className="bg-secondary flex items-center text-white rounded-lg text-xs sm:text-sm md:text-lg px-[10px] py-[6px]"
                             onClick={() => {
                                 setAddTrainerClicked(true)
                                 navigate('/trainers/add-trainer')

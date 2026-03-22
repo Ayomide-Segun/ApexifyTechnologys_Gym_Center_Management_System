@@ -9,9 +9,25 @@ export function DataContextProvider({children}) {
     const {setAddTrainerClicked} = useContext(UtilityContext);
     const [users, setUsers] = useState(null);
     const [payments, setPayments] = useState(null);
-    const members = users?.filter((user) => {
-        return payments?.find((payment)=> payment.member._id === user._id && user.role === "member")
+    const [displayedMembers, setDisplayedMembers] = useState(() => {
+        const saved = localStorage.getItem("displayedMembers");
+        return saved ? JSON.parse(saved) : []
     })
+    const [classes, setClasses] = useState(null);
+
+    useEffect(() => {
+        if(!users || !payments) return;
+        const members = users?.filter((user) => 
+            payments?.some(
+                (payment)=> payment.member._id === user._id && user.role === "member"
+            )
+            
+        )
+        setDisplayedMembers(members)
+    }, [users, payments])
+
+    
+    
     const trainers = users?.filter((user) => user.role === "trainer")
     const [subscriptions, setSubscriptions] = useState(null);
     const [specializations, setSpecializations] = useState(null);
@@ -25,6 +41,20 @@ export function DataContextProvider({children}) {
             phone: "",
             trainings: [],
             session: ""
+        }
+    })
+
+    const [classDetails, setClassDetails] = useState(() => {
+        const saved = localStorage.getItem("classDetails");
+        return saved ? JSON.parse(saved) : {
+            name: "",
+            trainer: "",
+            training: "",
+            capacity: "",
+            training: "",
+            session: "",
+            time: "",
+            days: []
         }
     })
     
@@ -61,10 +91,10 @@ export function DataContextProvider({children}) {
             alert(error.response?.data?.message || "Something went wrong")
         }
     }
-
-    async function handleSubmit(e, userDetails){
+ 
+    async function addUser(e, userDetails){
         e.preventDefault();
-        setAddTrainerClicked(false);
+        
         try {
             const res = await api.post('/register', userDetails);
             alert('Trainer registered successfully');
@@ -73,12 +103,58 @@ export function DataContextProvider({children}) {
                 res.data
             ]);
             localStorage.removeItem("trainerDetails")
-
+            setAddTrainerClicked(false);
         } catch (error) {
             console.log(error.response?.data.message || 'something went wrong')
             alert('Failed to add trainer')
         }
     }
+    
+    async function addClass(e, details){
+        e.preventDefault();
+        const submitData = {
+            ...details,
+            capacity: Number(details.capacity)
+        };
+
+        try {
+            const res = await api.post('/add-class', details);
+            alert('Class created successfully');
+            setClasses(prev => [
+                ...prev,
+                res.data
+            ]);
+            localStorage.removeItem("classDetails")
+            setAddClassClicked(false);
+        } catch (error) {
+            console.log(error.response?.data.message || 'something went wrong')
+            alert('Failed to add class')
+        }
+    }
+
+
+    async function handleSearch(value){
+        const term = value.trim().toLowerCase();
+
+        if(!term){
+            setDisplayedMembers(members)
+            return;
+        }
+
+        const filteredMembers = members
+        .filter((m) => {   
+            return(
+                m.username?.toLowerCase().startsWith(term)||
+                m.gymId?.toLowerCase().startsWith(term)
+            )
+        })
+        .sort((a, b) => a.username.localeCompare(b.username))
+        setDisplayedMembers(filteredMembers)
+    }
+
+    useEffect(() => {
+        localStorage.setItem("displayedMembers", JSON.stringify(displayedMembers))
+    }, [displayedMembers])
 
     useEffect(() => {
         localStorage.setItem("trainerDetails", JSON.stringify(trainerDetails))
@@ -120,6 +196,14 @@ export function DataContextProvider({children}) {
         );
     }, []);
 
+    useEffect(() => {
+        api.get('all-classes')
+        .then((res) => {
+            setClasses(res.data);
+        })
+        .catch(err => console.log(err))
+    }, [classes])
+
 
     return(
         <DataContext.Provider
@@ -128,7 +212,7 @@ export function DataContextProvider({children}) {
                 setUsers,
                 payments,
                 setPayments,
-                members,
+                displayedMembers,
                 trainers,
                 subscriptions,
                 setSubscriptions,
@@ -138,7 +222,13 @@ export function DataContextProvider({children}) {
                 setSpecializations,
                 trainerDetails,
                 setTrainerDetails,
-                handleSubmit
+                addUser,
+                handleSearch,
+                classes,
+                setClasses,
+                classDetails,
+                setClassDetails,
+                addClass
             }}
         >
             {children}

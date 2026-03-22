@@ -18,10 +18,20 @@ export function UtilityContextProvider({children}) {
         const saved = localStorage.getItem("addTrainerClicked");
         return saved ? JSON.parse(saved) : false
     })
+    const [addClassClicked, setAddClassClicked] = useState(() => {
+        const saved = localStorage.getItem("addClassClicked");
+        return saved ? JSON.parse(saved) : false
+    })
+    const [search, setSearch] = useState('');
+    const role = "admin"
 
     useEffect(() => {
         localStorage.setItem("addTrainerClicked", JSON.stringify(addTrainerClicked))
     }, [addTrainerClicked])
+
+    useEffect(() => {
+        localStorage.setItem("addClassClicked", JSON.stringify(addClassClicked))
+    }, [addClassClicked])
 
     return(
         <UtilityContext.Provider
@@ -36,7 +46,12 @@ export function UtilityContextProvider({children}) {
                 showRow,
                 setShowRow,
                 addTrainerClicked,
-                setAddTrainerClicked
+                setAddTrainerClicked,
+                addClassClicked,
+                setAddClassClicked,
+                search,
+                setSearch,
+                role
             }}
         >
             {children}

@@ -10,28 +10,39 @@ import { Header } from './components/Header';
 import { UtilityContext } from "./contexts/utilityContext";
 import { AddTrainer } from "./screens/AddTrainer"
 import { Trainers } from './screens/Trainers';
+import { Classes } from './screens/Classes';
+import { AddClass } from './screens/AddClass';
+import { Billings } from './screens/Billings';
+import { Login } from './screens/Login';
+import { Authenticate } from './components/Authenticate';
 
 function App() { 
         const  { navigate, openAuthenticatePanel, setOpenAuthenticatePanel, openSidebar, setOpenSidebar } = useContext(UtilityContext);
-    
+        
     return(
         <>
          <div
-                    className="sm:flex w-[100%] bg-background h-screen"
+                className="sm:flex w-[100%] bg-background h-auto"
+            >
+                <Sidebar
+                    navigate={navigate}
+                    openSidebar={openSidebar}
+                />
+                <div
+                    className="w-[100%] sm:w-[78%] md:w-[85%] sm:mt-[15px] sm:mx-[8px] md:mx-[15px]"
                 >
-                    <Sidebar
-                        navigate={navigate}
+                    <Header
                         openSidebar={openSidebar}
+                        setOpenSidebar={setOpenSidebar}
+                        setOpenAuthenticatePanel={setOpenAuthenticatePanel}
+                        openAuthenticatePanel={openAuthenticatePanel}
                     />
                     <div
-                        className="w-[100%] sm:w-[78%] md:w-[85%] sm:mt-[15px] sm:mx-[8px] md:mx-[15px]"
+                        className="px-[20px] w-[100%] text-white h-screen"
                     >
-                        <Header
-                            openSidebar={openSidebar}
-                            setOpenSidebar={setOpenSidebar}
-                            setOpenAuthenticatePanel={setOpenAuthenticatePanel}
-                            openAuthenticatePanel={openAuthenticatePanel}
-                        />
+                        {
+                            openAuthenticatePanel && <Authenticate/>
+                        }
                         <Routes>
                             <Route
                                 path='/'
@@ -69,10 +80,36 @@ function App() {
                                     <AddTrainer/>
                                 }
                             />
+                            <Route
+                                path='/classes'
+                                element={
+                                    <Classes/>
+                                }
+                            />
+                            <Route
+                                path='/classes/add-class'
+                                element={
+                                    <AddClass/>
+                                }
+                            />
+                            <Route
+                                path='/billings'
+                                element={
+                                    <Billings/>
+                                }
+                            />
+                            <Route
+                                path='/login'
+                                element={
+                                    <Login/>
+                                }
+                            />
                         </Routes>
-                        
                     </div>
+                    
+                    
                 </div>
+            </div>
             
         </>
     )

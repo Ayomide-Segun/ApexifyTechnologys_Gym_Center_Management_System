@@ -1,7 +1,8 @@
 const Class = require('../models/Class');
+const User = require('../Models/User');
 
 exports.addClass = async(req, res) => {
-    const {name, training, trainer, capacity, session, time} = req.body;
+    const {name, training, trainer, capacity, session, time, days} = req.body;
     try{
         const trainingClass = await Class.create({
             name,
@@ -9,11 +10,19 @@ exports.addClass = async(req, res) => {
             trainer,
             capacity,
             session,
-            time
+            time,
+            days
         })
+
+        await User.findByIdAndUpdate(
+            trainer,
+            {classroom: trainingClass._id},
+            {returnDocument: "after"}
+        )
+
         res.status(201).json({
             message: "Class added successfully"
-        })
+        }) 
     }catch(error) {
         console.log(error)
         res.status(500).json({
@@ -24,7 +33,10 @@ exports.addClass = async(req, res) => {
 
 exports.allClasses = async(req, res) => {
     try{
-        const trainingClass = await Class.find();
+        const trainingClass = await Class
+        .find()
+        .populate("training")
+        .populate("trainer");
         res.status(200).json(trainingClass);
     } catch(error) {
         res.status(500).json({

@@ -3,7 +3,7 @@ import { DataContext } from "../contexts/DataContext";
 
 
 export function AddTrainer(){
-    const {specializations, handleSubmit, trainerDetails, setTrainerDetails} = useContext(DataContext);
+    const {specializations, addUser, trainerDetails, setTrainerDetails} = useContext(DataContext);
     const inputArray = ["username", "email", "phone", "trainings", "session"]
     
     const sessions = ["", "morning", "evening"];
@@ -16,16 +16,16 @@ export function AddTrainer(){
 
     return(
         <div
-            className="text-gray-50 h-screen"
+            className="text-gray-50"
         >
             <p
                 className="text-gray-500  ml-[10px]"
             >
-               &#187;<a href="/trainers">Trainers</a> / <a href="/trainers/add-trainer">Add trainer</a>
+               &#187; <a href="/trainers">Trainers</a> / <a href="/trainers/add-trainer">Add trainer</a>
             </p>
             <form
                 className="mx-[15px] md:mx-[100px] my-[15px]"
-                onSubmit={(e) => handleSubmit(e, trainerDetails)}
+                onSubmit={(e) => addUser(e, trainerDetails)}
             >
                 {inputArray.map((i, index) => 
                     <div

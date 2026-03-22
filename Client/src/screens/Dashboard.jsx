@@ -5,17 +5,10 @@ import { UtilityContext } from "../contexts/utilityContext";
 import { Authenticate } from "../components/Authenticate";
 
 export function Dashboard() {
-    const {navigate, openSidebar, setOpenSidebar, openAuthenticatePanel, setOpenAuthenticatePanel} = useContext(UtilityContext);
+    const {openAuthenticatePanel} = useContext(UtilityContext);
 
     return(
         <>
-                
-            <div
-                className="px-[20px] w-[100%] text-white"
-            >
-                {
-                    openAuthenticatePanel && <Authenticate/>
-                }
                 <div
                     className="flex  gap-[30px]"
                 >
@@ -65,7 +58,6 @@ export function Dashboard() {
                     <div></div>
                     <div></div>
                 </div>
-            </div>
         </>
         
     )

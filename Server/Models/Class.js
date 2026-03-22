@@ -28,7 +28,19 @@ const classSchema = new mongoose.Schema(
         time: {
             type: String,
             required: true
-        }
+        },
+        days: [{
+            type: String,
+            enum: [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+            ]
+        }]
     },
     {
         timestamps: true

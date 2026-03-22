@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true
         },
+        subscription:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Subscription'
+        },
         password: {
             type: String,
             required: true
